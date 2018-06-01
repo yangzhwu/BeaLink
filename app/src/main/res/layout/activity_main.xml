@@ -1,18 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/main_title"
+        layout="@layout/layout_title"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_title"
+        android:layout_above="@+id/divider_line"
+        android:background="@color/windowBackground"/>
+
+    <View
+        android:id="@+id/divider_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#666666"
+        android:layout_above="@+id/main_tab"/>
+
+    <RadioGroup
+        android:id="@+id/main_tab"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:layout_alignParentBottom="true"
+        android:background="@color/windowBackground"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp">
 
-</android.support.constraint.ConstraintLayout>
+        <RadioButton
+            android:id="@+id/main_tab_chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/selector_main_wx"
+            android:button="@null"
+            android:text="聊天"
+            android:gravity="center"
+            android:textColor="@color/selector_main_tab_color"/>
+
+        <RadioButton
+            android:id="@+id/main_tab_contact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/selector_contatc_list"
+            android:button="@null"
+            android:text="通讯录"
+            android:gravity="center"
+            android:textColor="@color/selector_main_tab_color"/>
+
+        <RadioButton
+            android:id="@+id/main_tab_find"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/selector_main_find"
+            android:button="@null"
+            android:text="发现"
+            android:gravity="center"
+            android:textColor="@color/selector_main_tab_color"/>
+
+        <RadioButton
+            android:id="@+id/main_tab_personal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/selector_main_personal"
+            android:button="@null"
+            android:text="我"
+            android:gravity="center"
+            android:textColor="@color/selector_main_tab_color"/>
+    </RadioGroup>
+</RelativeLayout>

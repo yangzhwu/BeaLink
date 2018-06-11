@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.bealink.zhengwuy.bealink.R;
 import com.bealink.zhengwuy.bealink.fragment.ChatListFragment;
@@ -23,7 +24,8 @@ public class MainActivity extends BaseActivity {
     private final String[] mTitles = {"聊天", "通讯录", "发现", "我的"};
     private MyPagerAdapter mAdapter;
     private ViewPager mViewPager;
-    private RadioButton mChatRB, mContactRB, mFindRB, mPersonalRB;
+    private RadioGroup mRadioGroup;
+//    private RadioButton mChatRB, mContactRB, mFindRB, mPersonalRB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class MainActivity extends BaseActivity {
         initData();
         initView();
         initListener();
+
+        mRadioGroup.check(R.id.main_tab_chat);
     }
 
     private void initData() {
@@ -46,34 +50,35 @@ public class MainActivity extends BaseActivity {
         mAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
 
-        mChatRB = findViewById(R.id.main_tab_chat);
-        mContactRB = findViewById(R.id.main_tab_contact);
-        mFindRB = findViewById(R.id.main_tab_find);
-        mPersonalRB = findViewById(R.id.main_tab_personal);
+        mRadioGroup = findViewById(R.id.main_tab);
+//        mChatRB = findViewById(R.id.main_tab_chat);
+//        mContactRB = findViewById(R.id.main_tab_contact);
+//        mFindRB = findViewById(R.id.main_tab_find);
+//        mPersonalRB = findViewById(R.id.main_tab_personal);
     }
 
     private void initListener() {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                switch (position) {
-                    case 0:
-                        mChatRB.setChecked(true);
-                        break;
-                    case 1:
-                        mContactRB.setChecked(true);
-                        break;
-                    case 2:
-                        mFindRB.setChecked(true);
-                        break;
-                    case 3:
-                        mPersonalRB.setChecked(true);
-                        break;
-                }
             }
 
             @Override
             public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        mRadioGroup.check(R.id.main_tab_chat);
+                        break;
+                    case 1:
+                        mRadioGroup.check(R.id.main_tab_contact);
+                        break;
+                    case 2:
+                        mRadioGroup.check(R.id.main_tab_find);
+                        break;
+                    case 3:
+                        mRadioGroup.check(R.id.main_tab_personal);
+                        break;
+                }
             }
 
             @Override
@@ -81,45 +86,24 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        mChatRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (mViewPager.getCurrentItem() != 0) {
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i) {
+                    case R.id.main_tab_chat:
                         mViewPager.setCurrentItem(0);
-                    }
-                }
-            }
-        });
-        mFindRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (mViewPager.getCurrentItem() != 1) {
+                        break;
+                    case R.id.main_tab_contact:
                         mViewPager.setCurrentItem(1);
-                    }
-                }
-            }
-        });
-
-        mContactRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (mViewPager.getCurrentItem() != 2) {
+                        break;
+                    case R.id.main_tab_find:
                         mViewPager.setCurrentItem(2);
-                    }
-                }
-            }
-        });
-
-        mPersonalRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (mViewPager.getCurrentItem() != 3) {
+                        break;
+                    case R.id.main_tab_personal:
                         mViewPager.setCurrentItem(3);
-                    }
+                        break;
+                    default:
+                        break;
                 }
             }
         });

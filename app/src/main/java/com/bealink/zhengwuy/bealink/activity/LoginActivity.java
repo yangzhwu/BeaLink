@@ -1,15 +1,13 @@
 package com.bealink.zhengwuy.bealink.activity;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -48,18 +46,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        float width = mBtnLogin.getMeasuredWidth();
-//        float height = mBtnLogin.getMeasuredHeight();
-
-        mName.setVisibility(View.INVISIBLE);
-        mPsw.setVisibility(View.INVISIBLE);
-
+        float width = mInputLayout.getMeasuredWidth();
         inputAnimator(mInputLayout, width);
 
     }
 
     private void inputAnimator(final View view, float w) {
-        ValueAnimator animator = ValueAnimator.ofFloat(0, w);
+        float progressWidth = progress.getMeasuredWidth();
+        ValueAnimator animator = ValueAnimator.ofFloat(0, (w - progressWidth) / 2);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
@@ -71,47 +65,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 view.setLayoutParams(params);
             }
         });
-        AnimatorSet set = new AnimatorSet();
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 1f, 0.5f);
-        set.setDuration(1000);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.playTogether(animator, animator2);
-        set.start();
-        set.addListener(new Animator.AnimatorListener() {
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                // TODO Auto-generated method stub
-
-            }
-
+        animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-
+                super.onAnimationEnd(animation);
                 progress.setVisibility(View.VISIBLE);
                 progressAnimator(progress);
                 mInputLayout.setVisibility(View.INVISIBLE);
-
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
-                        recovery();
                         LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     }
                 }, 2000);
             }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                // TODO Auto-generated method stub
-
-            }
         });
+        animator.start();
 
     }
 
@@ -130,27 +99,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         });
         animator3.start();
 
-    }
-
-    /**
-     * 恢复初始状态
-     */
-    private void recovery() {
-        progress.setVisibility(View.GONE);
-        mInputLayout.setVisibility(View.VISIBLE);
-        mName.setVisibility(View.VISIBLE);
-        mPsw.setVisibility(View.VISIBLE);
-
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
-        params.leftMargin = 0;
-        params.rightMargin = 0;
-        mInputLayout.setLayoutParams(params);
-
-
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 0.5f,1f );
-        animator2.setDuration(500);
-        animator2.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator2.start();
     }
 
 }

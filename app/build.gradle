@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -41,6 +45,4 @@ dependencies {
 
     //图片轮转
     implementation 'cn.bingoogolapple:bga-banner:2.2.4@aar'
-    //首页
-    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
 }

@@ -45,4 +45,7 @@ dependencies {
 
     //图片轮转
     implementation 'cn.bingoogolapple:bga-banner:2.2.4@aar'
+
+    //通用recyclerView适配器
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
 }

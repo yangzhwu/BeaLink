@@ -9,7 +9,7 @@ import android.util.Log;
  */
 
 public class LogUtil {
-    private static final int LOG_LEVEL_D = 1;
+    public static final int LOG_LEVEL_D = 1;
     private static final int LOG_LEVEL_E = 2;
     private static int sCurrentLogLevel = LOG_LEVEL_E;
 

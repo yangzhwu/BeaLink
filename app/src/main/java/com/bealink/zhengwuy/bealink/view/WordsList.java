@@ -111,4 +111,15 @@ public class WordsList extends View {
     public interface OnIndexChangeListener {
         void onIndexChangeListener(String headerWord);
     }
+
+    public void setCurrentIndex(String headerWord) {
+        for (int i = 0; i < sWords.length; i++) {
+            if (sWords[i].equals(headerWord)) {
+                if (i != mCurrentIndex) {
+                    mCurrentIndex = i;
+                    invalidate();
+                }
+            }
+        }
+    }
 }

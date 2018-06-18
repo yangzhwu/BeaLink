@@ -37,6 +37,7 @@ public class ContactsFragment extends Fragment implements WordsList.OnIndexChang
     private RecyclerView mContactsRv;
     private ContactsListAdapter mContactsListAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private List<ContactBean> mContactBeanList;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -93,13 +94,34 @@ public class ContactsFragment extends Fragment implements WordsList.OnIndexChang
     }
 
     private void initListener() {
+        mContactsRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int position = linearLayoutManager.findFirstVisibleItemPosition();
+                mWordsList.setCurrentIndex(mContactBeanList.get(position).getHeaderWord());
+            }
+        });
     }
 
     private void initData() {
-        List<ContactBean> contactsList = new ContactsUtil(getContext()).getPhone();
-        Collections.sort(contactsList, (contactBean, t1) -> contactBean.getPinyin().compareTo(t1.getPinyin()));
-        mContactsListAdapter = new ContactsListAdapter(contactsList);
+        mContactBeanList = new ContactsUtil(getContext()).getPhone();
+//        Collections.sort(mContactBeanList, (contactBean, t1) -> contactBean.getPinyin().compareTo(t1.getPinyin()));
+        Collections.sort(mContactBeanList, (o1, o2) -> {
+            if (o1.getHeaderWord().equals("#")) {
+                return 1;
+            } else if (o2.getHeaderWord().equals("#")) {
+                return -1;
+            }
+            return o1.getPinyin().compareTo(o2.getPinyin());
+        });
+        mContactsListAdapter = new ContactsListAdapter(mContactBeanList);
         mContactsRv.setAdapter(mContactsListAdapter);
     }
 

@@ -19,7 +19,11 @@ public class ContactBean {
     public void setName(String name) {
         this.name = name;
         pinyin = Pinyin.toPinyin(name, null);
-        headerWord = pinyin.substring(0, 1);
+        if (pinyin.toUpperCase().charAt(0) < 'A' || pinyin.toUpperCase().charAt(0) > 'Z') {
+            headerWord = "#";
+        } else {
+            headerWord = pinyin.substring(0, 1);
+        }
     }
 
     public void setPhoneNumber(String phoneNumber) {

@@ -19,8 +19,8 @@ import com.bealink.zhengwuy.bealink.utils.DimenUtils;
  * des:
  */
 public class WordsList extends View {
-    private static final char[] sWords = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-            'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#'};
+    private static final String[] sWords = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+            "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#"};
 
     private Paint mWordsPaint;
     private Paint mBgPaint;
@@ -76,12 +76,12 @@ public class WordsList extends View {
             } else {
                 mWordsPaint.setColor(Color.GRAY);
             }
-            mWordsPaint.getTextBounds(sWords, i, 1, mRect);
+            mWordsPaint.getTextBounds(sWords[i], 0, 1, mRect);
             int wordWidth = mRect.width();
             int wordHeight = mRect.height();
             float wordX = mWordItemWidth / 2 - wordWidth / 2;
             float wordY = mWordItemHeight / 2 + mWordItemHeight * i + wordHeight / 2 ;
-            canvas.drawText(sWords, i, 1, wordX, wordY, mWordsPaint);
+            canvas.drawText(sWords[i], 0, 1, wordX, wordY, mWordsPaint);
         }
     }
 
@@ -108,7 +108,7 @@ public class WordsList extends View {
 
     }
 
-    public static interface OnIndexChangeListener {
-        void onIndexChangeListener(char c);
+    public interface OnIndexChangeListener {
+        void onIndexChangeListener(String headerWord);
     }
 }

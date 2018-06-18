@@ -6,22 +6,22 @@ import android.util.Log;
 import com.bealink.zhengwuy.bealink.BuildConfig;
 import com.bealink.zhengwuy.bealink.bean.request.LoginRequestBean;
 import com.bealink.zhengwuy.bealink.bean.request.RegisterRequestBean;
+import com.bealink.zhengwuy.bealink.bean.response.BaseResponseBean;
 import com.bealink.zhengwuy.bealink.bean.response.LoginResponseBean;
 import com.bealink.zhengwuy.bealink.bean.response.RegisterResponseBean;
 import com.bealink.zhengwuy.bealink.constant.Constants;
+import com.bealink.zhengwuy.bealink.rxjava.ServerResponseFun;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -125,12 +125,13 @@ public class RetrofitManager {
     /**
      * 封装返回后的结果在主线程中调用
      * @param observable 网络线程
-     * @param subscriber 网络返回的回调
+     * @param observer 网络返回的回调
      * @param <T> 泛型
      */
-    private <T> void defaultSchedule(Observable<T> observable, Observer<T> subscriber) {
+    private <T extends BaseResponseBean> void defaultSchedule(Observable<T> observable, Observer<T> observer) {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+                .map(new ServerResponseFun<>())
+                .subscribe(observer);
     }
 }

@@ -18,10 +18,11 @@ import com.bealink.zhengwuy.bealink.bean.response.LoginResponseBean;
 import com.bealink.zhengwuy.bealink.bean.response.RegisterResponseBean;
 import com.bealink.zhengwuy.bealink.internet.RetrofitManager;
 import com.bealink.zhengwuy.bealink.rxjava.InternetObserver;
+import com.bealink.zhengwuy.bealink.utils.CommonUtil;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
-//    private static final String TAG = "LoginActivity";
+    private static final String TAG = "LoginActivity";
     private static final int TYPE_LOGIN = 1, TYPE_REGISTER = 2;
     private TextView mBtnLogin, mBtnRegister;
     private View progress;
@@ -60,6 +61,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.main_btn_login:
                 if (checkInput()) {
+                    CommonUtil.hideSoftInput(this, mAccountTv);
                     mNameLL.setVisibility(View.INVISIBLE);
                     mPswLL.setVisibility(View.INVISIBLE);
                     startAnimator(TYPE_LOGIN);
@@ -67,6 +69,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.main_btn_register:
                 if (checkInput()) {
+                    CommonUtil.hideSoftInput(this, mAccountTv);
                     mNameLL.setVisibility(View.INVISIBLE);
                     mPswLL.setVisibility(View.INVISIBLE);
                     startAnimator(TYPE_REGISTER);
@@ -124,7 +127,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
 
             @Override
-            public void onError(Throwable e) {
+            public void handlerError() {
                 recoverAnimator();
             }
         });
@@ -142,8 +145,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
 
             @Override
-            public void onError(Throwable e) {
-                ToastUtils.show("注册失败");
+            public void handlerError() {
                 recoverAnimator();
             }
         });

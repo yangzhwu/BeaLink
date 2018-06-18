@@ -3,6 +3,8 @@
     package="com.bealink.zhengwuy.bealink">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 读取联系人权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:name=".AppApplication"

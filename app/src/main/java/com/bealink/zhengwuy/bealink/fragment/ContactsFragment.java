@@ -5,13 +5,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bealink.zhengwuy.bealink.R;
+import com.bealink.zhengwuy.bealink.adapter.ContactsListAdapter;
+import com.bealink.zhengwuy.bealink.bean.other.ContactBean;
+import com.bealink.zhengwuy.bealink.utils.ContactsUtil;
 import com.bealink.zhengwuy.bealink.view.WordsList;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ContactsFragment extends Fragment implements WordsList.OnIndexChangeListener{
     // TODO: Rename parameter arguments, choose names that match
@@ -25,6 +34,9 @@ public class ContactsFragment extends Fragment implements WordsList.OnIndexChang
     private WordsList mWordsList;
     private TextView mWordTv;
     private Handler mHandler;
+    private RecyclerView mContactsRv;
+    private ContactsListAdapter mContactsListAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -63,10 +75,32 @@ public class ContactsFragment extends Fragment implements WordsList.OnIndexChang
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
+        initView(view);
+        initData();
+        initListener();
+        return view;
+    }
+
+    private void initView(View view) {
         mWordsList = view.findViewById(R.id.word_list);
         mWordsList.setOnIndexChangeListener(this);
         mWordTv = view.findViewById(R.id.word_tv);
-        return view;
+        mContactsRv = view.findViewById(R.id.contact_recycler);
+
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mContactsRv.setLayoutManager(mLinearLayoutManager);
+    }
+
+    private void initListener() {
+
+    }
+
+    private void initData() {
+        List<ContactBean> contactsList = new ContactsUtil(getContext()).getPhone();
+        Collections.sort(contactsList, (contactBean, t1) -> contactBean.getPinyin().compareTo(t1.getPinyin()));
+        mContactsListAdapter = new ContactsListAdapter(contactsList);
+        mContactsRv.setAdapter(mContactsListAdapter);
     }
 
 
@@ -81,10 +115,16 @@ public class ContactsFragment extends Fragment implements WordsList.OnIndexChang
     }
 
     @Override
-    public void onIndexChangeListener(char c) {
-        mWordTv.setText(String.valueOf(c));
+    public void onIndexChangeListener(String headerWord) {
+        mWordTv.setText(headerWord);
         mWordTv.setVisibility(View.VISIBLE);
         mHandler.removeCallbacksAndMessages(null);
         mHandler.postDelayed(() -> mWordTv.setVisibility(View.GONE), 300);
+
+        int position = mContactsListAdapter.getFirstPosition(headerWord);
+        if (position != -1) {
+            mLinearLayoutManager.scrollToPositionWithOffset(position, 0);
+            mLinearLayoutManager.setStackFromEnd(true);
+        }
     }
 }

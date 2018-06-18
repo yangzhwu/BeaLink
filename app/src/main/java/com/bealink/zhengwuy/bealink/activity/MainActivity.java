@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.bealink.zhengwuy.bealink.R;
 import com.bealink.zhengwuy.bealink.fragment.ChatListFragment;
@@ -25,6 +26,7 @@ public class MainActivity extends BaseActivity {
     private MyPagerAdapter mAdapter;
     private ViewPager mViewPager;
     private RadioGroup mRadioGroup;
+    private TextView mTitleLeftTv;
 //    private RadioButton mChatRB, mContactRB, mFindRB, mPersonalRB;
 
     @Override
@@ -49,8 +51,10 @@ public class MainActivity extends BaseActivity {
         mViewPager = findViewById(R.id.viewpager);
         mAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setOffscreenPageLimit(2);
 
         mRadioGroup = findViewById(R.id.main_tab);
+        mTitleLeftTv = findViewById(R.id.title_txt_left);
 //        mChatRB = findViewById(R.id.main_tab_chat);
 //        mContactRB = findViewById(R.id.main_tab_contact);
 //        mFindRB = findViewById(R.id.main_tab_find);
@@ -67,15 +71,19 @@ public class MainActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
+                        mTitleLeftTv.setText(mTitles[0]);
                         mRadioGroup.check(R.id.main_tab_chat);
                         break;
                     case 1:
+                        mTitleLeftTv.setText(mTitles[1]);
                         mRadioGroup.check(R.id.main_tab_contact);
                         break;
                     case 2:
+                        mTitleLeftTv.setText(mTitles[2]);
                         mRadioGroup.check(R.id.main_tab_find);
                         break;
                     case 3:
+                        mTitleLeftTv.setText(mTitles[3]);
                         mRadioGroup.check(R.id.main_tab_personal);
                         break;
                 }
@@ -86,25 +94,22 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i) {
-                    case R.id.main_tab_chat:
-                        mViewPager.setCurrentItem(0);
-                        break;
-                    case R.id.main_tab_contact:
-                        mViewPager.setCurrentItem(1);
-                        break;
-                    case R.id.main_tab_find:
-                        mViewPager.setCurrentItem(2);
-                        break;
-                    case R.id.main_tab_personal:
-                        mViewPager.setCurrentItem(3);
-                        break;
-                    default:
-                        break;
-                }
+        mRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            switch (i) {
+                case R.id.main_tab_chat:
+                    mViewPager.setCurrentItem(0);
+                    break;
+                case R.id.main_tab_contact:
+                    mViewPager.setCurrentItem(1);
+                    break;
+                case R.id.main_tab_find:
+                    mViewPager.setCurrentItem(2);
+                    break;
+                case R.id.main_tab_personal:
+                    mViewPager.setCurrentItem(3);
+                    break;
+                default:
+                    break;
             }
         });
     }
@@ -129,5 +134,15 @@ public class MainActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             return mTitles[position];
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

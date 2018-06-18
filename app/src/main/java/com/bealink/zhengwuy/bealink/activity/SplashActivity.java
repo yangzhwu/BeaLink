@@ -1,23 +1,30 @@
 package com.bealink.zhengwuy.bealink.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bealink.zhengwuy.bealink.R;
+import com.bealink.zhengwuy.bealink.utils.ToastUtils;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.bingoogolapple.bgabanner.BGALocalImageSize;
+import io.reactivex.functions.Consumer;
 
 public class SplashActivity extends BaseActivity {
 
 //    private static final String TAG = "SplashActivity";
     private BGABanner mBackgroundBanner;
     private BGABanner mForegroundBanner;
+    private RxPermissions mRxPermissions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRxPermissions = new RxPermissions(this);
 
         initView();
         setListener();
@@ -61,11 +68,21 @@ public class SplashActivity extends BaseActivity {
                 R.drawable.uoko_guide_foreground_3);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onResume() {
         super.onResume();
 
         // 如果开发者的引导页主题是透明的，需要在界面可见时给背景 Banner 设置一个白色背景，避免滑动过程中两个 Banner 都设置透明度后能看到 Launcher
         mBackgroundBanner.setBackgroundResource(android.R.color.white);
+        if (!mRxPermissions.isGranted(Manifest.permission.READ_CONTACTS)) {
+            mRxPermissions.request(Manifest.permission.READ_CONTACTS).subscribe(granted -> {
+                if (granted) {
+                    ToastUtils.show("lalal");
+                } else {
+                    finish();
+                }
+            });
+        }
     }
 }

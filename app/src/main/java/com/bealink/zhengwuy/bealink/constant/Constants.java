@@ -39,5 +39,7 @@ public class Constants {
 
     public static class ApiConstant {
         public static final String URL = "http://www.wordbl.com:8080/bealink/";
+
+        public static final int CODE_SERVER_RESPONSE_OK = 200;
     }
 }

@@ -1,6 +1,8 @@
 package com.bealink.zhengwuy.bealink.rxjava;
 
+import com.bealink.zhengwuy.bealink.internet.ExceptionEngine;
 import com.bealink.zhengwuy.bealink.utils.LogUtil;
+import com.bealink.zhengwuy.bealink.utils.ToastUtils;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -22,4 +24,14 @@ public abstract class InternetObserver<T> implements Observer<T> {
     public void onSubscribe(Disposable d) {
 
     }
+
+    @Override
+    public void onError(Throwable e) {
+        LogUtil.e(TAG, e.getMessage());
+        String errorMessage = ExceptionEngine.handleException(e);
+        ToastUtils.show(errorMessage);
+        handlerError();
+    }
+
+    public abstract void handlerError();
 }

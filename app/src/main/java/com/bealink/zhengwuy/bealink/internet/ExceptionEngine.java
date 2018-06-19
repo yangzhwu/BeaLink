@@ -25,7 +25,7 @@ public class ExceptionEngine {
             return ERROR_INTERNET_ERROR;
         } else if (e instanceof ServerExeception) {
             ServerExeception exeception = (ServerExeception) e;
-            return exeception.getErrorCode() + " " + exeception.getErrorMessage();
+            return exeception.getErrorMessage();
         } else if (e instanceof JsonParseException
                 || e instanceof JSONException
                 || e instanceof ParseException) {

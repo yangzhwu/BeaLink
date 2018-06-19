@@ -1,6 +1,9 @@
 package com.bealink.zhengwuy.bealink.rxjava;
 
+import android.text.TextUtils;
+
 import com.bealink.zhengwuy.bealink.internet.ExceptionEngine;
+import com.bealink.zhengwuy.bealink.internet.ServerExeception;
 import com.bealink.zhengwuy.bealink.utils.LogUtil;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
 
@@ -27,7 +30,14 @@ public abstract class InternetObserver<T> implements Observer<T> {
 
     @Override
     public void onError(Throwable e) {
-        LogUtil.e(TAG, e.getMessage());
+        if (e instanceof ServerExeception) {
+            ServerExeception serverExeception = (ServerExeception) e;
+            LogUtil.e(TAG, serverExeception.getErrorCode() + " " + serverExeception.getErrorMessage());
+        } else {
+            if (e != null && TextUtils.isEmpty(e.getMessage())) {
+                LogUtil.e(TAG, e.getMessage());
+            }
+        }
         String errorMessage = ExceptionEngine.handleException(e);
         ToastUtils.show(errorMessage);
         handlerError();

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     android:background="@color/colorPrimary">
 
     <include

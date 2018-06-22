@@ -5,10 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -23,7 +19,6 @@ import java.util.ArrayList;
 public class MainActivity extends BaseActivity {
     private ArrayList<Fragment> mFragments = new ArrayList<>(4);
     private final String[] mTitles = {"聊天", "通讯录", "发现", "我的"};
-    private MyPagerAdapter mAdapter;
     private ViewPager mViewPager;
     private RadioGroup mRadioGroup;
     private TextView mTitleLeftTv;
@@ -49,8 +44,8 @@ public class MainActivity extends BaseActivity {
 
     private void initView() {
         mViewPager = findViewById(R.id.viewpager);
-        mAdapter = new MyPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mAdapter);
+        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(2);
 
         mRadioGroup = findViewById(R.id.main_tab);

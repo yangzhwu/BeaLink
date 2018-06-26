@@ -19,29 +19,29 @@ import com.bealink.zhengwuy.bealink.R;
  * email: 13802885114@139.com
  * des:
  */
-public class TabView extends LinearLayout {
+public class TagView extends LinearLayout {
 
     private TextView mFrontTv;
     private TextView mBackTv;
-    private Context mContext;
+//    private Context mContext;
     private boolean mIsToggling;
 
-    public TabView(Context context) {
+    public TagView(Context context) {
         this(context, null);
     }
 
-    public TabView(Context context, @Nullable AttributeSet attrs) {
+    public TagView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TabView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public TagView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
-        mContext = context;
-        View view = LayoutInflater.from(context).inflate(R.layout.tab_view_layout, this);
+//        mContext = context;
+        View view = LayoutInflater.from(context).inflate(R.layout.tag_view_layout, this);
         mFrontTv = view.findViewById(R.id.tab_front_tv);
         mBackTv = view.findViewById(R.id.tab_back_tv);
     }
@@ -60,10 +60,22 @@ public class TabView extends LinearLayout {
         super.onLayout(changed, l, t, r, b);
         int width = Math.max(mFrontTv.getWidth(), mBackTv.getWidth());
         int height = Math.max(mFrontTv.getHeight(), mBackTv.getHeight());
-        mFrontTv.setWidth(width);
-        mFrontTv.setHeight(height);
-        mBackTv.setWidth(width);
-        mBackTv.setHeight(height);
+        if (width > mBackTv.getWidth()) {
+            mBackTv.setWidth(width);
+        }
+        if (height > mBackTv.getHeight()) {
+            mBackTv.setHeight(height);
+        }
+        if (width > mFrontTv.getWidth()) {
+            mFrontTv.setWidth(width);
+        }
+        if (height > mFrontTv.getHeight()) {
+            mFrontTv.setHeight(height);
+        }
+//        mFrontTv.setWidth(width);
+//        mFrontTv.setHeight(height);
+//        mBackTv.setWidth(width);
+//        mBackTv.setHeight(height);
     }
 
     public synchronized void toggle() {

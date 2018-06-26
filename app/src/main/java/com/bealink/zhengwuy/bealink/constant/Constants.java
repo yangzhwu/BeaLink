@@ -25,10 +25,8 @@ public class Constants {
      * Email: 963460692@qq.com
      * description: 存储sharedPreference的key
      */
-    public static class SharedPreferenceKeyConstant {
-        public static final String KEY_HAS_LOAD_DATA = "has_load_data";
-        public static final String KEY_CHOOSE_COUNTY_WEATHER_ID = "choose_county_weather_id";
-        public static final String KEY_CHOOSE_COUNTY_NAME = "choose_county_name";
+    public static class SharedPreferenceKey {
+        public static final String KEY_MY_TAG = "my_tag";
     }
 
     /**

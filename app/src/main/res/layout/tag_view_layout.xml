@@ -6,13 +6,11 @@
 
     <TextView
         android:id="@+id/tab_front_tv"
-        style="@style/tab_tv_style"
-        android:text="德玛西亚" />
+        style="@style/tag_tv_style"/>
 
     <TextView
         android:id="@+id/tab_back_tv"
-        style="@style/tab_tv_style"
-        android:visibility="invisible"
-        android:text="10"/>
+        style="@style/tag_tv_style"
+        android:visibility="invisible" />
 
 </RelativeLayout>

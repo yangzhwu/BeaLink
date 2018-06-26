@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7adfbf"
+    android:background="@color/colorPrimary"
     android:fitsSystemWindows="true">
 
 
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/input_layout"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/text_bg"
+                android:background="@drawable/selector_button_background"
                 android:gravity="center"
                 android:paddingBottom="8dip"
                 android:layout_marginLeft="50dp"
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/main_btn_login"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/text_bg"
+                android:background="@drawable/selector_button_background"
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"

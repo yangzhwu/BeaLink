@@ -8,4 +8,6 @@
         android:width="1dip"
         android:color="#ffffff" />
 
+    <solid android:color="#aa6BBEB8" />
+
 </shape>

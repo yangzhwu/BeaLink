@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="TabLayout">
+    <declare-styleable name="TagLayout">
         <attr name="sub_view_hor_space" format="dimension"/>
         <attr name="sub_view_ver_space" format="dimension"/>
     </declare-styleable>

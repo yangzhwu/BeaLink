@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48.0dip"
-    android:background="@android:color/transparent">
+    android:background="@null">
 
     <TextView
         android:id="@+id/title_txt_left"
@@ -11,7 +11,7 @@
         android:layout_marginLeft="10dp"
         android:text="@string/app_name"
         android:layout_toRightOf="@+id/title_img_back"
-        android:visibility="invisible"/>
+        android:visibility="visible"/>
 
     <ImageView
         android:id="@+id/title_img_back"

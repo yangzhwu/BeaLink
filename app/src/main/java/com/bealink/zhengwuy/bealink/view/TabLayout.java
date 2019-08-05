@@ -17,7 +17,7 @@ import java.util.List;
  * email: 13802885114@139.com
  * des: 标签布局layout
  */
-public class TagLayout extends ViewGroup{
+public class TabLayout extends ViewGroup{
     private static final String TAG = "TabLayout";
 
     private Context mContext;
@@ -26,15 +26,15 @@ public class TagLayout extends ViewGroup{
     //子标签的纵向间隔
     private int mSubviewVerticalSpace;
 
-    public TagLayout(Context context) {
+    public TabLayout(Context context) {
         this(context, null);
     }
 
-    public TagLayout(Context context, AttributeSet attrs) {
+    public TabLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TagLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         init(attrs);
@@ -42,9 +42,9 @@ public class TagLayout extends ViewGroup{
 
     //读取自定义属性
     private void init(AttributeSet attrs) {
-        TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.TagLayout);
-        mSubviewHorizontalSpace = (int) typedArray.getDimension(R.styleable.TagLayout_sub_view_hor_space, 0);
-        mSubviewVerticalSpace = (int) typedArray.getDimension(R.styleable.TagLayout_sub_view_ver_space, 0);
+        TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.TabLayout);
+        mSubviewHorizontalSpace = (int) typedArray.getDimension(R.styleable.TabLayout_sub_view_hor_space, 0);
+        mSubviewVerticalSpace = (int) typedArray.getDimension(R.styleable.TabLayout_sub_view_ver_space, 0);
         typedArray.recycle();
     }
 

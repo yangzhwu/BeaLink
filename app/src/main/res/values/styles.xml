@@ -69,23 +69,16 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="tag_tv_style">
+    <style name="tab_tv_style">
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/windowBackground</item>
         <item name="android:singleLine">true</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:background">@drawable/shape_tag_tv_background</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_centerInParent">true</item>
-    </style>
-
-    <style name="dialog_custom" parent="@android:style/Theme.Dialog">
-        <item name="android:windowIsFloating">true</item>    <!--是否浮在界面上-->
-        <item name="android:windowIsTranslucent">true</item> <!--是否半透明-->
-        <item name="android:windowNoTitle">false</item>       <!--是否有标题-->
-        <item name="android:windowBackground">@android:color/transparent</item> <!--窗口背景色透明-->
     </style>
 
 </resources>

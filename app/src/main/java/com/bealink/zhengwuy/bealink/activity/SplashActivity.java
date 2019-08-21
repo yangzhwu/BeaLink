@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.bealink.zhengwuy.bealink.R;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
+import com.hyphenate.chat.EMClient;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
@@ -24,6 +25,11 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (EMClient.getInstance().isLoggedInBefore()) {
+            MainActivity.start(this);
+            finish();
+            return;
+        }
         mRxPermissions = new RxPermissions(this);
 
         initView();
@@ -73,12 +79,18 @@ public class SplashActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        // 如果开发者的引导页主题是透明的，需要在界面可见时给背景 Banner 设置一个白色背景，避免滑动过程中两个 Banner 都设置透明度后能看到 Launcher
-        mBackgroundBanner.setBackgroundResource(android.R.color.white);
-        if (!mRxPermissions.isGranted(Manifest.permission.READ_CONTACTS)) {
-            mRxPermissions.request(Manifest.permission.READ_CONTACTS).subscribe(granted -> {
+        if (!EMClient.getInstance().isLoggedInBefore()) {
+            // 如果开发者的引导页主题是透明的，需要在界面可见时给背景 Banner 设置一个白色背景，避免滑动过程中两个 Banner 都设置透明度后能看到 Launcher
+            mBackgroundBanner.setBackgroundResource(android.R.color.white);
+            mRxPermissions.request(Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.CAMERA
+            ).subscribe(granted -> {
                 if (granted) {
-                    ToastUtils.show("lalal");
+                    ToastUtils.show("权限申请成功");
                 } else {
                     finish();
                 }

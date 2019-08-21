@@ -1,6 +1,8 @@
 package com.bealink.zhengwuy.bealink.internet;
 
 import android.net.ParseException;
+import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.google.gson.JsonParseException;
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
@@ -33,6 +35,9 @@ public class ExceptionEngine {
         } else if(e instanceof ConnectException) {
             return ERROR_CONNECTION_ERROR;
         } else {
+            if (TextUtils.isEmpty(e.getMessage())) {
+                return e.getMessage();
+            }
             return ERROR_UNKNOW_ERROR;
         }
     }

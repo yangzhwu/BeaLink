@@ -19,13 +19,13 @@ public class LogUtil {
 
     public static void d(String tag, String message) {
         if (sCurrentLogLevel <= LOG_LEVEL_D) {
-            Log.d(tag, message);
+            Log.d("cClub:" + tag, message);
         }
     }
 
     public static void e(String tag, String message) {
         if (sCurrentLogLevel <= LOG_LEVEL_E) {
-            Log.e(tag, message);
+            Log.e("cClub:" +tag, message);
         }
     }
 }

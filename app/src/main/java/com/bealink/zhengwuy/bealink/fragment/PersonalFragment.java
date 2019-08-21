@@ -1,59 +1,84 @@
 package com.bealink.zhengwuy.bealink.fragment;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.bealink.zhengwuy.bealink.R;
+import com.bealink.zhengwuy.bealink.activity.LoginActivity;
+import com.bealink.zhengwuy.bealink.im.ImHelper;
+import com.bealink.zhengwuy.bealink.utils.ToastUtils;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class PersonalFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
-
-    public PersonalFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PersonalFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PersonalFragment newInstance(String param1, String param2) {
-        PersonalFragment fragment = new PersonalFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Button mLogoutBtn;
+    private SweetAlertDialog mSweetAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_personal, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+        initView(rootView);
+        initListener();
+        return rootView;
+    }
+
+    private void initView(View rootView) {
+        mLogoutBtn = rootView.findViewById(R.id.logout_btn);
+        mSweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        mSweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        mSweetAlertDialog.setTitleText("正在退出中");
+        mSweetAlertDialog.setCancelable(false);
+
+    }
+
+    private void initListener() {
+        mLogoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSweetAlertDialog.show();
+                ImHelper.getInstance().logout(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+                        ToastUtils.show("退出登录成功");
+                        mSweetAlertDialog.dismiss();
+                        LoginActivity.start(getActivity());
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtils.show("退出登录失败");
+                        mSweetAlertDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+            }
+        });
     }
 
     @Override

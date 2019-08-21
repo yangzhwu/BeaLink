@@ -3,8 +3,11 @@ package com.bealink.zhengwuy.bealink.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,8 @@ import com.bealink.zhengwuy.bealink.bean.request.LoginRequestBean;
 import com.bealink.zhengwuy.bealink.bean.request.RegisterRequestBean;
 import com.bealink.zhengwuy.bealink.bean.response.LoginResponseBean;
 import com.bealink.zhengwuy.bealink.bean.response.RegisterResponseBean;
-import com.bealink.zhengwuy.bealink.internet.RetrofitManager;
+import com.bealink.zhengwuy.bealink.im.ContactManager;
+import com.bealink.zhengwuy.bealink.im.ImHelper;
 import com.bealink.zhengwuy.bealink.rxjava.InternetObserver;
 import com.bealink.zhengwuy.bealink.utils.CommonUtil;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
@@ -31,11 +35,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private TextView mAccountTv, mPswTv;
     private String mAccount, mPsw;
 
+    public static void start(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         initView();
         initListener();
     }
@@ -119,16 +127,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         LoginRequestBean loginRequestBean = new LoginRequestBean();
         loginRequestBean.setAccount(mAccount);
         loginRequestBean.setPassword(mPsw);
-        RetrofitManager.getIntance().login(loginRequestBean, new InternetObserver<LoginResponseBean>() {
-            @Override
-            public void onNext(LoginResponseBean loginResponseBean) {
-                LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
-            }
-
+        ImHelper.getInstance().login(loginRequestBean, new InternetObserver<LoginResponseBean>() {
             @Override
             public void handlerError() {
                 recoverAnimator();
+            }
+
+            @Override
+            public void onNext(LoginResponseBean loginResponseBean) {
+                ToastUtils.show("登陆成功");
+                recoverAnimator();
+                ContactManager.getInstance().refresh();
+                MainActivity.start(LoginActivity.this);
+                finish();
             }
         });
     }
@@ -137,15 +148,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         RegisterRequestBean registerRequestBean = new RegisterRequestBean();
         registerRequestBean.setAccount(mAccount);
         registerRequestBean.setPassword(mPsw);
-        RetrofitManager.getIntance().register(registerRequestBean, new InternetObserver<RegisterResponseBean>() {
+        ImHelper.getInstance().register(registerRequestBean, new InternetObserver<RegisterResponseBean>() {
             @Override
-            public void onNext(RegisterResponseBean registerResponseBean) {
-                ToastUtils.show("注册成功");
+            public void handlerError() {
                 recoverAnimator();
             }
 
             @Override
-            public void handlerError() {
+            public void onNext(RegisterResponseBean registerResponseBean) {
+                ToastUtils.show("注册成功");
                 recoverAnimator();
             }
         });

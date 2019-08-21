@@ -1,7 +1,10 @@
 package com.bealink.zhengwuy.bealink;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
+import com.bealink.zhengwuy.bealink.im.ImHelper;
 import com.bealink.zhengwuy.bealink.utils.FileUtil;
 import com.bealink.zhengwuy.bealink.utils.LogUtil;
 import com.bealink.zhengwuy.bealink.utils.SharedPreferenceHelper;
@@ -24,5 +27,14 @@ public class AppApplication extends Application {
         SharedPreferenceHelper.init(this);
         FileUtil.init(this);
         ToastUtils.init(this);
+        //初始化环信sdk
+        ImHelper.getInstance().init(this);
+
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.AddFriendsFragment">
+
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/friend_username_et"
+            android:hint="输入好友用户名"/>
+
+        <Button
+            android:id="@+id/add_friend_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加好友"/>
+
+
+    </LinearLayout>
+</FrameLayout>

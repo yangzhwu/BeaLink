@@ -42,4 +42,8 @@ public class Constants {
 
         public static final int CODE_SERVER_RESPONSE_OK = 200;
     }
+
+    public static class Key {
+        public static final String KEY_OP_FRIENDS = "op_friends";
+    }
 }

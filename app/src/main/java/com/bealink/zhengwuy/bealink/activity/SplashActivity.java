@@ -3,16 +3,24 @@ package com.bealink.zhengwuy.bealink.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bealink.zhengwuy.bealink.R;
+import com.bealink.zhengwuy.bealink.constant.Constants;
+import com.bealink.zhengwuy.bealink.utils.SharedPreferenceHelper;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
 import com.hyphenate.chat.EMClient;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.concurrent.TimeUnit;
+
 import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.bingoogolapple.bgabanner.BGALocalImageSize;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Consumer;
 
 public class SplashActivity extends BaseActivity {
@@ -21,20 +29,40 @@ public class SplashActivity extends BaseActivity {
     private BGABanner mBackgroundBanner;
     private BGABanner mForegroundBanner;
     private RxPermissions mRxPermissions;
+    private SweetAlertDialog mSweetAlertDialog;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setStatusBarColorId(R.color.transparent);
         super.onCreate(savedInstanceState);
-        if (EMClient.getInstance().isLoggedInBefore()) {
-            MainActivity.start(this);
-            finish();
-            return;
-        }
-        mRxPermissions = new RxPermissions(this);
 
+        mRxPermissions = new RxPermissions(this);
         initView();
-        setListener();
-        processLogic();
+
+        //第一次使用app，开屏页轮播
+        if (SharedPreferenceHelper.getInstance().getBoolean(Constants.Key.KEY_IS_FIRST_USE_APP, true)) {
+            setListener();
+            setBannerImages();
+            doRequestPermission();
+        } else {
+            BGALocalImageSize localImageSize = new BGALocalImageSize(720, 1280, 320, 640);
+            // 设置数据源
+            mBackgroundBanner.setData(localImageSize, ImageView.ScaleType.CENTER_CROP,
+                    R.drawable.uoko_guide_background_1);
+            //非第一次使用app，延时3s后调至
+            Observable.timer(3, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+                @Override
+                public void accept(Long aLong) throws Exception {
+                    if (EMClient.getInstance().isLoggedInBefore()) {
+                        MainActivity.start(SplashActivity.this);
+                    } else {
+                        LoginActivity.start(SplashActivity.this);
+                    }
+                    finish();
+                }
+            });
+        }
     }
 
     private void initView() {
@@ -53,13 +81,14 @@ public class SplashActivity extends BaseActivity {
         mForegroundBanner.setEnterSkipViewIdAndDelegate(R.id.btn_guide_enter, 0, new BGABanner.GuideDelegate() {
             @Override
             public void onClickEnterOrSkip() {
+                SharedPreferenceHelper.getInstance().putBoolean(Constants.Key.KEY_IS_FIRST_USE_APP, false);
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
             }
         });
     }
 
-    private void processLogic() {
+    private void setBannerImages() {
         // Bitmap 的宽高在 maxWidth maxHeight 和 minWidth minHeight 之间
         BGALocalImageSize localImageSize = new BGALocalImageSize(720, 1280, 320, 640);
         // 设置数据源
@@ -82,19 +111,41 @@ public class SplashActivity extends BaseActivity {
         if (!EMClient.getInstance().isLoggedInBefore()) {
             // 如果开发者的引导页主题是透明的，需要在界面可见时给背景 Banner 设置一个白色背景，避免滑动过程中两个 Banner 都设置透明度后能看到 Launcher
             mBackgroundBanner.setBackgroundResource(android.R.color.white);
-            mRxPermissions.request(Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.CAMERA
-            ).subscribe(granted -> {
-                if (granted) {
-                    ToastUtils.show("权限申请成功");
-                } else {
-                    finish();
-                }
-            });
         }
+    }
+
+    @SuppressLint("CheckResult")
+    private void doRequestPermission() {
+        mRxPermissions.request(Manifest.permission.READ_CONTACTS,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA
+        ).subscribe(granted -> {
+            if (granted) {
+                ToastUtils.show(getString(R.string.request_permission_sucess));
+            } else {
+                //有权限尚未申请，弹框提示用户权限申请
+                showAgainPermissionDialog();
+            }
+        });
+    }
+
+    private void showAgainPermissionDialog() {
+        if (mSweetAlertDialog == null) {
+            mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getResources().getString(R.string.warn))
+                    .setContentText(getResources().getString(R.string.warn_with_defind_permission))
+                    .setCancelText(getResources().getString(R.string.cancel))
+                    .showCancelButton(true)
+                    .setCancelClickListener(sweetAlertDialog -> mSweetAlertDialog.dismiss())
+                    .setConfirmText(getResources().getString(R.string.confirm))
+                    .setConfirmClickListener(sweetAlertDialog -> {
+                        mSweetAlertDialog.dismiss();
+                        doRequestPermission();
+                    });
+        }
+        mSweetAlertDialog.show();
     }
 }

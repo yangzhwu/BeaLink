@@ -7,30 +7,6 @@ package com.bealink.zhengwuy.bealink.constant;
  */
 
 public class Constants {
-
-    /**
-     * Created by zhengwuy on 2017/2/20.
-     * Emali: 963460692@qq.com
-     * description:存储文件相关的常量
-     */
-
-    public static class FileConstant {
-        public static final String PROVINCE_FILE_NAME = "province.txt";
-        public static final String CITY_FILE_NAME = "city.txt";
-        public static final String COUNTY_FILE_NAME = "county.txt";
-    }
-
-    /**
-     * Created by zhengwuy on 2017/2/19.
-     * Email: 963460692@qq.com
-     * description: 存储sharedPreference的key
-     */
-    public static class SharedPreferenceKeyConstant {
-        public static final String KEY_HAS_LOAD_DATA = "has_load_data";
-        public static final String KEY_CHOOSE_COUNTY_WEATHER_ID = "choose_county_weather_id";
-        public static final String KEY_CHOOSE_COUNTY_NAME = "choose_county_name";
-    }
-
     /**
      * Created by zhengwuy on 2017/1/31.
      * Email: 963460692@qq.com
@@ -44,6 +20,7 @@ public class Constants {
     }
 
     public static class Key {
+        public static final String KEY_IS_FIRST_USE_APP = "key_is_first_use_app";
         public static final String KEY_OP_FRIENDS = "op_friends";
     }
 }

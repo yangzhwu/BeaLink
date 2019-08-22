@@ -30,7 +30,7 @@ public class SharedPreferenceHelper {
         return mInstance;
     }
 
-    void putBoolean(String key, Boolean value) {
+    public void putBoolean(String key, Boolean value) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putBoolean(key, value);
         editor.apply();

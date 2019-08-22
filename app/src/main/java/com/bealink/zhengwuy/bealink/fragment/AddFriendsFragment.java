@@ -11,14 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.bealink.zhengwuy.bealink.R;
-import com.bealink.zhengwuy.bealink.utils.LogUtil;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
+import com.bealink.zhengwuy.bealink.im.ImHelper;
+import com.bealink.zhengwuy.bealink.utils.DialogUtil;
+import com.bealink.zhengwuy.bealink.utils.ToastUtils;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class AddFriendsFragment extends Fragment {
     private static final String TAG = "AddFriendsFragment";
     private EditText mUserNameEt;
     private Button mAddFriendBtn;
+    private SweetAlertDialog mSweetAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,26 +43,39 @@ public class AddFriendsFragment extends Fragment {
     private void initView(View rootView) {
         mUserNameEt = rootView.findViewById(R.id.friend_username_et);
         mAddFriendBtn = rootView.findViewById(R.id.add_friend_btn);
+        mSweetAlertDialog = DialogUtil.creatCommonLoadingDialog(getActivity(), "添加中");
     }
 
     private void initListener() {
         mAddFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mSweetAlertDialog.show();
                 String userName = mUserNameEt.getText().toString();
-                 new Thread(new Runnable() {
+                ImHelper.getInstance().addFrined(userName, new Observer<Object>() {
                     @Override
-                    public void run() {
-                        try {
-                            EMClient.getInstance().contactManager().addContact(userName, "");
-                        } catch (HyphenateException e) {
-                            e.printStackTrace();
-                            LogUtil.e(TAG, "添加失败");
-                            return;
-                        }
-                        LogUtil.e(TAG, "添加成功");
+                    public void onSubscribe(Disposable d) {
+
                     }
-                }).start();
+
+                    @Override
+                    public void onNext(Object o) {
+                        ToastUtils.show("添加成功");
+                        mSweetAlertDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtils.show("添加失败");
+                        mSweetAlertDialog.dismiss();
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
             }
         });
     }

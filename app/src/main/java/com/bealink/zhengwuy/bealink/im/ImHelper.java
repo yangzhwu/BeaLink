@@ -45,8 +45,6 @@ public class ImHelper {
         EaseUI.getInstance().init(context, emOptions);
 
         mImListenerManager = ImListenerManager.getInstance();
-        //刷新好友列表
-        ContactManager.getInstance().getAllConatctsFromServer();
 
     }
 
@@ -105,5 +103,15 @@ public class ImHelper {
                 });
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
+    }
+
+    public void addFrined(String userName, Observer<Object> observer) {
+        Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> emitter) throws Exception {
+                EMClient.getInstance().contactManager().addContact(userName, "");
+                emitter.onNext(new Object());
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
     }
 }

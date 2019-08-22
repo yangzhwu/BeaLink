@@ -5,6 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +29,7 @@ import com.bealink.zhengwuy.bealink.im.ImHelper;
 import com.bealink.zhengwuy.bealink.rxjava.InternetObserver;
 import com.bealink.zhengwuy.bealink.utils.CommonUtil;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
+import com.bealink.zhengwuy.bealink.view.CustomVideoView;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
@@ -34,6 +40,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private LinearLayout mNameLL, mPswLL;
     private TextView mAccountTv, mPswTv;
     private String mAccount, mPsw;
+    private CustomVideoView mCustomVideoView;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -42,6 +49,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setStatusBarColorId(R.color.transparent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
@@ -57,11 +65,32 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mPswLL = findViewById(R.id.input_layout_psw);
         mAccountTv = findViewById(R.id.account_tv);
         mPswTv = findViewById(R.id.psw_tv);
+        mCustomVideoView = findViewById(R.id.custom_video_view);
+
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.sport);
+        MediaMetadataRetriever media = new MediaMetadataRetriever();
+        media.setDataSource(this, uri);
+        mCustomVideoView.setBackground(new BitmapDrawable(getResources(), media.getFrameAtTime(10)));
+        mCustomVideoView.setVideoURI(uri);
     }
 
     private void initListener() {
         mBtnLogin.setOnClickListener(this);
         mBtnRegister.setOnClickListener(this);
+        mCustomVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                        if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START)
+                            mCustomVideoView.setBackgroundColor(Color.TRANSPARENT);
+                        return true;
+                    }
+                });
+            }
+        });
+        mCustomVideoView.start();
     }
 
     @Override
@@ -136,7 +165,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onNext(LoginResponseBean loginResponseBean) {
                 ToastUtils.show("登陆成功");
-                recoverAnimator();
                 ContactManager.getInstance().refresh();
                 MainActivity.start(LoginActivity.this);
                 finish();

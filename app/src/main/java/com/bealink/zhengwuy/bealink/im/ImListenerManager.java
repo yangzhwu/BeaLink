@@ -23,6 +23,7 @@ public class ImListenerManager {
             @Override
             public void onConnected() {
                 LogUtil.e(TAG, "onConnected");
+                ContactManager.getInstance().refresh();
             }
 
             @Override

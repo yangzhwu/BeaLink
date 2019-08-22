@@ -1,5 +1,7 @@
 package com.bealink.zhengwuy.bealink.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
 import com.hyphenate.easeui.ui.EaseConversationListFragment;
 import com.hyphenate.exceptions.HyphenateException;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +46,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTitleLeftTv;
     private EaseConversationListFragment mEaseConversationListFragment;
     private EaseContactListFragment mEaseContactListFragment;
+    private RxPermissions mRxPermissions;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -61,6 +65,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initData() {
+        mRxPermissions = new RxPermissions(this);
+
         mEaseConversationListFragment = new EaseConversationListFragment();
         mEaseContactListFragment = new EaseContactListFragment();
         mEaseContactListFragment.setContactsMap(ContactManager.getInstance().getAllContacts());
@@ -153,6 +159,21 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onListItemClicked(EaseUser user) {
                 ChatActivity.start(MainActivity.this, user.getUsername());
+            }
+        });
+        mEaseContactListFragment.setEaseContactHeaderItemClickListener(new EaseContactListFragment.EaseContactHeaderItemClickListener() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onHeaderItemClicked(int viewId) {
+                if (mRxPermissions.isGranted(Manifest.permission.READ_CONTACTS)) {
+                    LocalContactActivity.start(MainActivity.this);
+                } else {
+                    mRxPermissions.request(Manifest.permission.READ_CONTACTS).subscribe(granted -> {
+                        if (granted) {
+                            LocalContactActivity.start(MainActivity.this);
+                        }
+                    });
+                }
             }
         });
 

@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.FriendOpActivity">
+    tools:context=".activity.FriendOpActivity"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/friend_op_title"
+        layout="@layout/layout_title"/>
+
 
     <FrameLayout
         android:id="@+id/friend_op_container"
@@ -13,4 +20,4 @@
 
     </FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

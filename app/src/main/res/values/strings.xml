@@ -4,4 +4,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="warn">警告</string>
+    <string name="request_permission_sucess">权限申请成功</string>
+    <string name="warn_with_defind_permission">缺少权限会导致功能不可用，是否重新授予权限？</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
 </resources>

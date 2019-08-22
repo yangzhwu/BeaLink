@@ -31,10 +31,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:icon"
-        tools:ignore="UnusedAttribute">
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-        <activity android:name=".activity.FriendOpActivity"></activity>
+        tools:ignore="UnusedAttribute"
+        tools:replace="android:icon">
+        <activity android:name=".activity.LocalContactActivity"></activity>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <activity android:name=".activity.FriendOpActivity" />
         <activity android:name=".activity.ChatActivity" />
         <activity
             android:name=".activity.SplashActivity"

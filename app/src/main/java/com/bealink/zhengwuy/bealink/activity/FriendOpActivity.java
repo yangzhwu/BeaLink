@@ -3,6 +3,7 @@ package com.bealink.zhengwuy.bealink.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.bealink.zhengwuy.bealink.R;
 import com.bealink.zhengwuy.bealink.constant.Constants;
@@ -38,7 +39,9 @@ public class FriendOpActivity extends BaseActivity {
     }
 
     private void initView() {
+        TextView textView = findViewById(R.id.title_txt_left);
         if (mOperator == OP_ADD_FRIENDS) {
+            textView.setText("添加好友");
             AddFriendsFragment addFriendsFragment = new AddFriendsFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.friend_op_container, addFriendsFragment).commit();
         }

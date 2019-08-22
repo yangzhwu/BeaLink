@@ -14,6 +14,7 @@
 package com.hyphenate.easeui.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -145,6 +146,15 @@ public class EaseContactListFragment extends EaseBaseFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 hideSoftKeyboard();
                 return false;
+            }
+        });
+
+        getView().findViewById(R.id.local_contact_ll).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mEaseContactHeaderItemClickListener != null) {
+                    mEaseContactHeaderItemClickListener.onHeaderItemClicked(v.getId());
+                }
             }
         });
         
@@ -300,6 +310,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
         }
     };
     private EaseContactListItemClickListener listItemClickListener;
+    private EaseContactHeaderItemClickListener mEaseContactHeaderItemClickListener;
     
     
     protected void onConnectionDisconnected() {
@@ -332,6 +343,14 @@ public class EaseContactListFragment extends EaseBaseFragment {
      */
     public void setContactListItemClickListener(EaseContactListItemClickListener listItemClickListener){
         this.listItemClickListener = listItemClickListener;
+    }
+
+    public interface EaseContactHeaderItemClickListener {
+        void onHeaderItemClicked(int viewId);
+    }
+
+    public void setEaseContactHeaderItemClickListener(EaseContactHeaderItemClickListener easeContactHeaderItemClickListener) {
+        mEaseContactHeaderItemClickListener = easeContactHeaderItemClickListener;
     }
     
 }

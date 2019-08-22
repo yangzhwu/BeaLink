@@ -1,5 +1,6 @@
 package com.bealink.zhengwuy.bealink.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import com.bealink.zhengwuy.bealink.R;
 import com.bealink.zhengwuy.bealink.activity.LoginActivity;
 import com.bealink.zhengwuy.bealink.im.ImHelper;
+import com.bealink.zhengwuy.bealink.utils.DialogUtil;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -40,10 +42,7 @@ public class PersonalFragment extends Fragment {
 
     private void initView(View rootView) {
         mLogoutBtn = rootView.findViewById(R.id.logout_btn);
-        mSweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-        mSweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        mSweetAlertDialog.setTitleText("正在退出中");
-        mSweetAlertDialog.setCancelable(false);
+        mSweetAlertDialog = DialogUtil.creatCommonLoadingDialog(getActivity(), "正在退出中");
 
     }
 

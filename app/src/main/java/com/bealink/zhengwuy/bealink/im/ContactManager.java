@@ -9,7 +9,6 @@ import com.hyphenate.easeui.domain.EaseUser;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +18,6 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -31,6 +29,7 @@ public class ContactManager {
     private static final String TAG = "ContactManager";
     private static ContactManager sContactManager = new ContactManager();
     private Map<String, EaseUser> mUserMap = new ConcurrentHashMap<>();
+    private volatile boolean mIsGettingContactFromServer = false;
 
     public static ContactManager getInstance() {
         return sContactManager;
@@ -38,6 +37,10 @@ public class ContactManager {
 
     @SuppressLint("CheckResult")
     public void getAllConatctsFromServer() {
+        if (mIsGettingContactFromServer) {
+            return;
+        }
+        mIsGettingContactFromServer = true;
         LogUtil.d(TAG, "getAllConatctsFromServer");
         Observable.create(new ObservableOnSubscribe<List<String>>() {
             @Override
@@ -60,6 +63,7 @@ public class ContactManager {
                     mUserMap.put(username, new EaseUser(username));
                 }
                 postEvent();
+                mIsGettingContactFromServer = false;
             }
 
             @Override
@@ -68,6 +72,7 @@ public class ContactManager {
                 if (mUserMap.isEmpty()) {
 
                 }
+                mIsGettingContactFromServer = false;
             }
 
             @Override

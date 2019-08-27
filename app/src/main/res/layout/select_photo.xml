@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:id="@+id/select_from_gallery_ll"
+        style="@style/select_photo_style">
+
+        <TextView
+            android:id="@+id/select_from_gallery_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_form_gallery" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider1"
+        style="@style/divider_line"/>
+
+    <LinearLayout
+        android:id="@+id/select_from_take_photo_ll"
+        style="@style/select_photo_style">
+
+        <TextView
+            android:id="@+id/select_from_take_photo_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_from_take_photo" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider2"
+        style="@style/divider_line"/>
+
+    <LinearLayout
+        android:id="@+id/cancel_select_ll"
+        style="@style/select_photo_style">
+
+        <TextView
+            android:id="@+id/cancel_select_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -22,5 +22,8 @@ public class Constants {
     public static class Key {
         public static final String KEY_IS_FIRST_USE_APP = "key_is_first_use_app";
         public static final String KEY_OP_FRIENDS = "op_friends";
+        public static final String USER_NAME = "user_name";
+        public static final String PASSWORD = "password";
+
     }
 }

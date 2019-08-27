@@ -9,4 +9,8 @@
     <string name="warn_with_defind_permission">缺少权限会导致功能不可用，是否重新授予权限？</string>
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
+    <string name="location_failed">定位失败</string>
+    <string name="select_form_gallery">从相册选择</string>
+    <string name="select_from_take_photo">拍照</string>
+
 </resources>

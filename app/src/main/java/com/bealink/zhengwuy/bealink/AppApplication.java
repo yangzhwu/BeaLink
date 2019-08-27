@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.bealink.zhengwuy.bealink.im.ImHelper;
+import com.bealink.zhengwuy.bealink.location.LocationManager;
 import com.bealink.zhengwuy.bealink.utils.FileUtil;
 import com.bealink.zhengwuy.bealink.utils.LogUtil;
 import com.bealink.zhengwuy.bealink.utils.SharedPreferenceHelper;
@@ -29,6 +30,9 @@ public class AppApplication extends Application {
         ToastUtils.init(this);
         //初始化环信sdk
         ImHelper.getInstance().init(this);
+
+        LocationManager.getInstance().init(this);
+
 
     }
 

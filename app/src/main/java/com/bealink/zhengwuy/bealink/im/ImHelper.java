@@ -72,7 +72,10 @@ public class ImHelper {
         Observable.create((ObservableOnSubscribe<RegisterResponseBean>) emitter -> {
             try {
                 EMClient.getInstance().createAccount(registerRequestBean.getAccount(), registerRequestBean.getPassword());
-                emitter.onNext(new RegisterResponseBean());
+                RegisterResponseBean registerResponseBean = new RegisterResponseBean();
+                registerResponseBean.setUserName(registerRequestBean.getAccount());
+                registerResponseBean.setPassWord(registerRequestBean.getPassword());
+                emitter.onNext(registerResponseBean);
             } catch (HyphenateException e) {
                 e.printStackTrace();
                 emitter.onError(new Exception(e.getMessage()));

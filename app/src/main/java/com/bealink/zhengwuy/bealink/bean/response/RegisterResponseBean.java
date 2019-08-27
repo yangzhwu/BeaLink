@@ -12,6 +12,24 @@ public class RegisterResponseBean extends BaseResponseBean {
      * resultData : true
      */
     private boolean resultData;
+    private String mUserName;
+    private String mPassWord;
+
+    public void setPassWord(String passWord) {
+        mPassWord = passWord;
+    }
+
+    public void setUserName(String userName) {
+        mUserName = userName;
+    }
+
+    public String getUserName() {
+        return mUserName;
+    }
+
+    public String getPassWord() {
+        return mPassWord;
+    }
 
     public boolean isResultData() {
         return resultData;

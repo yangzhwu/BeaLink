@@ -1,8 +1,5 @@
 package com.bealink.zhengwuy.bealink.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,8 +8,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,23 +20,24 @@ import com.bealink.zhengwuy.bealink.bean.request.LoginRequestBean;
 import com.bealink.zhengwuy.bealink.bean.request.RegisterRequestBean;
 import com.bealink.zhengwuy.bealink.bean.response.LoginResponseBean;
 import com.bealink.zhengwuy.bealink.bean.response.RegisterResponseBean;
+import com.bealink.zhengwuy.bealink.constant.Constants;
 import com.bealink.zhengwuy.bealink.im.ContactManager;
 import com.bealink.zhengwuy.bealink.im.ImHelper;
 import com.bealink.zhengwuy.bealink.rxjava.InternetObserver;
-import com.bealink.zhengwuy.bealink.utils.CommonUtil;
+import com.bealink.zhengwuy.bealink.utils.DialogUtil;
 import com.bealink.zhengwuy.bealink.utils.ToastUtils;
 import com.bealink.zhengwuy.bealink.view.CustomVideoView;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
-    private static final int TYPE_LOGIN = 1, TYPE_REGISTER = 2;
+    private static final int REQUEST_CODE = 1000;
     private TextView mBtnLogin, mBtnRegister;
-    private View progress;
-    private View mInputLayout;
-    private LinearLayout mNameLL, mPswLL;
     private TextView mAccountTv, mPswTv;
     private String mAccount, mPsw;
     private CustomVideoView mCustomVideoView;
+    private SweetAlertDialog mSweetAlertDialog;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -57,12 +54,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initView() {
+        mSweetAlertDialog = DialogUtil.creatCommonLoadingDialog(this, "正在登陆中...");
         mBtnLogin = findViewById(R.id.main_btn_login);
         mBtnRegister = findViewById(R.id.main_btn_register);
-        progress = findViewById(R.id.layout_progress);
-        mInputLayout = findViewById(R.id.input_layout);
-        mNameLL = findViewById(R.id.input_layout_name);
-        mPswLL = findViewById(R.id.input_layout_psw);
         mAccountTv = findViewById(R.id.account_tv);
         mPswTv = findViewById(R.id.psw_tv);
         mCustomVideoView = findViewById(R.id.custom_video_view);
@@ -90,81 +84,56 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 });
             }
         });
-        mCustomVideoView.start();
+//        mCustomVideoView.start();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_btn_login:
-                if (checkInput()) {
-                    CommonUtil.hideSoftInput(this, mAccountTv);
-                    mNameLL.setVisibility(View.INVISIBLE);
-                    mPswLL.setVisibility(View.INVISIBLE);
-                    startAnimator(TYPE_LOGIN);
-                }
+                login();
                 break;
             case R.id.main_btn_register:
-                if (checkInput()) {
-                    CommonUtil.hideSoftInput(this, mAccountTv);
-                    mNameLL.setVisibility(View.INVISIBLE);
-                    mPswLL.setVisibility(View.INVISIBLE);
-                    startAnimator(TYPE_REGISTER);
-                }
+                startActivityForResult(new Intent(this, RegisterActivity.class), REQUEST_CODE);
                 break;
         }
     }
 
-    private boolean checkInput() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK && data != null) {
+                mAccountTv.setText(data.getStringExtra(Constants.Key.USER_NAME));
+                mPswTv.setText(data.getStringExtra(Constants.Key.PASSWORD));
+                login();
+            }
+        }
+    }
+
+    private void login() {
         mAccount = mAccountTv.getText().toString().trim();
         mPsw = mPswTv.getText().toString().trim();
         if (TextUtils.isEmpty(mAccount) || TextUtils.isEmpty(mPsw)) {
             ToastUtils.show("用户名和密码不能为空");
-            return false;
+            return;
         }
-        return true;
-    }
 
-    private void startAnimator(int type) {
-        int width = mInputLayout.getMeasuredWidth();
-        ValueAnimator animator = ValueAnimator.ofFloat(0, width / 2);
-        animator.addUpdateListener(animation -> {
-            float value = (Float) animation.getAnimatedValue();
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
-            params.leftMargin = (int) value;
-            params.rightMargin = (int) value;
-            mInputLayout.setLayoutParams(params);
-        });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                progress.setVisibility(View.VISIBLE);
-                mInputLayout.setVisibility(View.INVISIBLE);
-                if (type == TYPE_LOGIN) {
-                    login();
-                } else {
-                    register();
-                }
-            }
-        });
-        animator.setDuration(200);
-        animator.start();
-    }
-
-    private void login() {
+        mSweetAlertDialog.show();
         LoginRequestBean loginRequestBean = new LoginRequestBean();
         loginRequestBean.setAccount(mAccount);
         loginRequestBean.setPassword(mPsw);
         ImHelper.getInstance().login(loginRequestBean, new InternetObserver<LoginResponseBean>() {
             @Override
             public void handlerError() {
-                recoverAnimator();
+                ToastUtils.show("登陆失败");
+                mSweetAlertDialog.dismiss();
             }
 
             @Override
             public void onNext(LoginResponseBean loginResponseBean) {
                 ToastUtils.show("登陆成功");
+                mSweetAlertDialog.dismiss();
                 ContactManager.getInstance().refresh();
                 MainActivity.start(LoginActivity.this);
                 finish();
@@ -172,33 +141,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         });
     }
 
-    private void register() {
-        RegisterRequestBean registerRequestBean = new RegisterRequestBean();
-        registerRequestBean.setAccount(mAccount);
-        registerRequestBean.setPassword(mPsw);
-        ImHelper.getInstance().register(registerRequestBean, new InternetObserver<RegisterResponseBean>() {
-            @Override
-            public void handlerError() {
-                recoverAnimator();
-            }
 
-            @Override
-            public void onNext(RegisterResponseBean registerResponseBean) {
-                ToastUtils.show("注册成功");
-                recoverAnimator();
-            }
-        });
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
-    private void recoverAnimator() {
-        progress.setVisibility(View.GONE);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mInputLayout.getLayoutParams();
-        params.leftMargin = 0;
-        params.rightMargin = 0;
-        mInputLayout.setLayoutParams(params);
-        mInputLayout.setVisibility(View.VISIBLE);
-        mNameLL.setVisibility(View.VISIBLE);
-        mPswLL.setVisibility(View.VISIBLE);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCustomVideoView.start();
     }
-
 }
